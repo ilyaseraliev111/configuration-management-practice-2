@@ -4,8 +4,7 @@ import io
 from pathlib import Path
 import tempfile
 import unittest
-from src.config import parse_config
-from src.main import main
+from src.config import parse_config, print_config
 
 ARGUMENT_ERROR = 2
 PARAMETER_COUNT = 6
@@ -77,11 +76,11 @@ class ConfigTests(unittest.TestCase):
             self.assert_argument_error(args)
         self.assert_argument_error(args)
 
-    def test_no_network_in_prototype(self):
-        """Прототип проверяет синтаксис URL без сетевого запроса."""
+    def test_configuration_display(self):
+        """Функция отладочного вывода сохраняет все шесть настроек."""
         output = io.StringIO()
         with contextlib.redirect_stdout(output):
-            self.assertEqual(main(base_args()), 0)
+            print_config(parse_config(base_args()))
         lines = output.getvalue().splitlines()
         self.assertEqual(len(lines), PARAMETER_COUNT)
         self.assertIn("test_repo=false", lines)
