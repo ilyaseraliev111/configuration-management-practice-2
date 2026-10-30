@@ -1,0 +1,8 @@
+{
+  "packages": [
+    {"name": "A", "version": "1.0-r0", "dependencies": ["B", "C"]},
+    {"name": "B", "version": "1.0-r0", "dependencies": ["D"]},
+    {"name": "C", "version": "1.0-r0", "dependencies": ["D"]},
+    {"name": "D", "version": "1.0-r0", "dependencies": []}
+  ]
+}

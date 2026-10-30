@@ -74,6 +74,7 @@ class ConfigTests(unittest.TestCase):
             self.assertTrue(parse_config(args).test_repo)
             args[args.index("--package") + 1] = "lowercase"
             self.assert_argument_error(args)
+        args[args.index("--package") + 1] = "A"
         self.assert_argument_error(args)
 
     def test_configuration_display(self):
