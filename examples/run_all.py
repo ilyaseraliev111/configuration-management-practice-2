@@ -1,4 +1,4 @@
-"""Проверяет три этапа, не переключая рабочую ветку пользователя."""
+"""Проверяет четыре этапа, не переключая рабочую ветку пользователя."""
 import io
 import os
 from pathlib import Path
@@ -10,7 +10,8 @@ import tempfile
 
 ROOT = Path(__file__).resolve().parents[1]
 STAGES = [("stage1-config", "demo_stage1.py"),
-          ("stage2-fetch", "demo_stage2.py"), ("stage3-bfs", "demo_stage3.py")]
+          ("stage2-fetch", "demo_stage2.py"), ("stage3-bfs", "demo_stage3.py"),
+          ("stage4-operations", "demo_stage4.py")]
 
 
 def unpack_snapshot(raw, destination):
@@ -47,7 +48,7 @@ def run_stage(branch, demo):
 
 
 def main():
-    """Требует Git и ветки трёх этапов; код 1 означает неуспешную проверку."""
+    """Проверяет четыре ветки через Git; ошибка возвращает код 1."""
     try:
         if not shutil.which("git"):
             raise ValueError("для общего прогона нужен Git в PATH")
@@ -56,7 +57,7 @@ def main():
     except (OSError, ValueError, subprocess.CalledProcessError) as error:
         print(f"Общий прогон остановлен: {error}", file=sys.stderr)
         return 1
-    print("ВСЕ ТРИ ЭТАПА: проверки пройдены")
+    print("ВСЕ ЧЕТЫРЕ ЭТАПА: проверки пройдены")
     return 0
 
 

@@ -1,4 +1,4 @@
-"""Все шесть настроек поступают из опций командной строки."""
+"""Настройки CLI; с этапа 4 добавлен режим порядка загрузки."""
 import argparse
 from dataclasses import asdict, dataclass
 from src.validation import validate_name, validate_source, validate_version
@@ -16,6 +16,7 @@ class Config:
     version: str
     ascii: bool
     max_depth: int
+    load_order: bool = False
 
 
 def depth_value(value):
@@ -46,6 +47,8 @@ def build_parser():
                         help="Параметр ASCII-дерева; вывод будет на этапе 5")
     parser.add_argument("--max-depth", type=depth_value, default=DEFAULT_DEPTH,
                         help="Максимальная глубина BFS; по умолчанию 3")
+    parser.add_argument("--load-order", action="store_true",
+                        help="Показать порядок загрузки зависимостей (этап 4)")
     return parser
 
 
@@ -63,7 +66,7 @@ def parse_config(argv=None):
 
 
 def print_config(config):
-    """Только этап 1: печатает все шесть настроек как ключ=значение."""
+    """Печатает настройки как ключ=значение для проверки конфигурации."""
     for key, value in asdict(config).items():
         shown = str(value).lower() if isinstance(value, bool) else value
         print(f"{key}={shown}")

@@ -7,7 +7,7 @@ import unittest
 from src.config import parse_config, print_config
 
 ARGUMENT_ERROR = 2
-PARAMETER_COUNT = 6
+PARAMETER_COUNT = 7
 
 
 def base_args():
@@ -42,7 +42,7 @@ class ConfigTests(unittest.TestCase):
                 args.extend([option, value])
             with self.subTest(option=option, value=value):
                 self.assert_argument_error(args)
-        for flag in ["--ascii", "--test-repo"]:
+        for flag in ["--ascii", "--test-repo", "--load-order"]:
             self.assert_argument_error(base_args() + [flag, "maybe"])
 
     def assert_argument_error(self, args):
@@ -78,7 +78,7 @@ class ConfigTests(unittest.TestCase):
         self.assert_argument_error(args)
 
     def test_configuration_display(self):
-        """Функция отладочного вывода сохраняет все шесть настроек."""
+        """Функция отладочного вывода сохраняет все поля настроек."""
         output = io.StringIO()
         with contextlib.redirect_stdout(output):
             print_config(parse_config(base_args()))
