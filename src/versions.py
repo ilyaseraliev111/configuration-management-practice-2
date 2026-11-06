@@ -21,15 +21,15 @@ RESULTS = {"": {LESS, EQUAL, GREATER}, "=": {EQUAL}, "<": {LESS},
 
 
 class Kind(IntEnum):
-    """Порядок типов компонентов; END сравнивается после остальных."""
-    INITIAL = 0
-    NUMBER = 1
-    LETTER = 2
-    SUFFIX = 3
-    SUFFIX_NUMBER = 4
-    COMMIT = 5
-    REVISION = 6
-    END = 7
+    """Порядок типов компонентов; end сравнивается после остальных."""
+    initial = 0
+    number = 1
+    letter = 2
+    suffix = 3
+    suffix_number = 4
+    commit = 5
+    revision = 6
+    end = 7
 
 
 def version_tokens(version):
@@ -40,26 +40,26 @@ def version_tokens(version):
         fields = match.groupdict()
         if fields["number"]:
             raw = fields["number"]
-            kind = Kind.NUMBER if raw.startswith(".") else Kind.INITIAL
-            value = raw.lstrip(".") if kind == Kind.NUMBER else int(raw)
+            kind = Kind.number if raw.startswith(".") else Kind.initial
+            value = raw.lstrip(".") if kind == Kind.number else int(raw)
             tokens.append((kind, value))
         elif fields["suffix"]:
-            tokens.append((Kind.SUFFIX, SUFFIX_ORDER[fields["suffix"]]))
-            tokens.append((Kind.SUFFIX_NUMBER, int(fields["count"] or "0")))
+            tokens.append((Kind.suffix, SUFFIX_ORDER[fields["suffix"]]))
+            tokens.append((Kind.suffix_number, int(fields["count"] or "0")))
         elif fields["letter"]:
-            tokens.append((Kind.LETTER, fields["letter"]))
+            tokens.append((Kind.letter, fields["letter"]))
         elif fields["commit"]:
-            tokens.append((Kind.COMMIT, fields["commit"][1:]))
+            tokens.append((Kind.commit, fields["commit"][1:]))
         else:
-            tokens.append((Kind.REVISION, int(fields["revision"][2:])))
-    return [*tokens, (Kind.END, "")]
+            tokens.append((Kind.revision, int(fields["revision"][2:])))
+    return [*tokens, (Kind.end, "")]
 
 
 def compare_tokens(left, right):
     """Сравнивает значения одного типа, сохраняя правила ведущих нулей."""
     kind, first = left
     second = right[1]
-    if kind == Kind.NUMBER:
+    if kind == Kind.number:
         if not first.startswith("0") and not second.startswith("0"):
             first, second = int(first), int(second)
     return (first > second) - (first < second)
@@ -67,11 +67,11 @@ def compare_tokens(left, right):
 
 def ending_order(left, right, fuzzy):
     """Сравнивает различные типы, учитывая prerelease и префикс ~."""
-    if fuzzy and right[0] == Kind.END:
+    if fuzzy and right[0] == Kind.end:
         return EQUAL
-    if left[0] == Kind.SUFFIX and left[1] < NO_SUFFIX:
+    if left[0] == Kind.suffix and left[1] < NO_SUFFIX:
         return LESS
-    if right[0] == Kind.SUFFIX and right[1] < NO_SUFFIX:
+    if right[0] == Kind.suffix and right[1] < NO_SUFFIX:
         return GREATER
     return LESS if left[0] > right[0] else GREATER
 
