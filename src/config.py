@@ -1,4 +1,4 @@
-"""Настройки CLI; с этапа 4 добавлен режим порядка загрузки."""
+"""Настройки CLI анализа и режима вывода."""
 import argparse
 from dataclasses import asdict, dataclass
 from src.validation import validate_name, validate_source, validate_version
@@ -43,11 +43,12 @@ def build_parser():
                         help="Использовать тестовый JSON; анализ с этапа 3")
     parser.add_argument("--version", required=True,
                         help="Точная версия корневого пакета, например 1.0-r0")
-    parser.add_argument("--ascii", action="store_true",
-                        help="Параметр ASCII-дерева; вывод будет на этапе 5")
+    output = parser.add_mutually_exclusive_group()
+    output.add_argument("--ascii", action="store_true",
+                        help="Вывести ASCII-дерево вместо Mermaid")
     parser.add_argument("--max-depth", type=depth_value, default=DEFAULT_DEPTH,
                         help="Максимальная глубина BFS; по умолчанию 3")
-    parser.add_argument("--load-order", action="store_true",
+    output.add_argument("--load-order", action="store_true",
                         help="Показать порядок загрузки зависимостей (этап 4)")
     return parser
 

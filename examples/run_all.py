@@ -1,4 +1,4 @@
-"""Проверяет четыре этапа, не переключая рабочую ветку пользователя."""
+"""Проверяет пять этапов, не переключая рабочую ветку пользователя."""
 import io
 import os
 from pathlib import Path
@@ -11,7 +11,8 @@ import tempfile
 ROOT = Path(__file__).resolve().parents[1]
 STAGES = [("stage1-config", "demo_stage1.py"),
           ("stage2-fetch", "demo_stage2.py"), ("stage3-bfs", "demo_stage3.py"),
-          ("stage4-operations", "demo_stage4.py")]
+          ("stage4-operations", "demo_stage4.py"),
+          ("stage5-visualization", "demo_stage5.py")]
 
 
 def unpack_snapshot(raw, destination):
@@ -31,10 +32,21 @@ def unpack_snapshot(raw, destination):
                 raise ValueError("Git-снимок содержит не обычный файл")
 
 
+def stage_ref(branch):
+    """Использует локальную ветку или одноимённую ветку origin."""
+    for ref in (f"refs/heads/{branch}", f"refs/remotes/origin/{branch}"):
+        result = subprocess.run(["git", "show-ref", "--verify", "--quiet",
+                                 ref], cwd=ROOT, check=False)
+        if not result.returncode:
+            return ref
+    raise ValueError(f"не найдена ветка {branch}; проверьте git fetch origin")
+
+
 def run_stage(branch, demo):
     """Запускает пример и тесты нужного коммита без изменения рабочей копии."""
     print(f"\n=== {branch} ===", flush=True)
-    archive = subprocess.run(["git", "archive", "--format=tar", branch],
+    archive = subprocess.run(["git", "archive", "--format=tar",
+                              stage_ref(branch)],
                              cwd=ROOT, capture_output=True, check=True)
     with tempfile.TemporaryDirectory(prefix="apk-stage-") as directory:
         temporary = Path(directory)
@@ -48,7 +60,7 @@ def run_stage(branch, demo):
 
 
 def main():
-    """Проверяет четыре ветки через Git; ошибка возвращает код 1."""
+    """Проверяет пять веток через Git; ошибка возвращает код 1."""
     try:
         if not shutil.which("git"):
             raise ValueError("для общего прогона нужен Git в PATH")
@@ -57,7 +69,7 @@ def main():
     except (OSError, ValueError, subprocess.CalledProcessError) as error:
         print(f"Общий прогон остановлен: {error}", file=sys.stderr)
         return 1
-    print("ВСЕ ЧЕТЫРЕ ЭТАПА: проверки пройдены")
+    print("ВСЕ ПЯТЬ ЭТАПОВ: проверки пройдены")
     return 0
 
 

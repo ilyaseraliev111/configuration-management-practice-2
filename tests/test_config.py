@@ -54,6 +54,10 @@ class ConfigTests(unittest.TestCase):
         self.assertEqual(result.exception.code, ARGUMENT_ERROR)
         self.assertIn("error:", output.getvalue())
 
+    def test_exclusive_output_modes(self):
+        """ASCII-дерево и порядок загрузки выбираются отдельно."""
+        self.assert_argument_error(base_args() + ["--ascii", "--load-order"])
+
     def test_required_and_unknown(self):
         """Обязательные параметры нельзя пропускать или сокращать."""
         for option in ["--package", "--repository", "--version"]:

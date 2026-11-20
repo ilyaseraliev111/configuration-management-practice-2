@@ -60,15 +60,15 @@ class LoadingTests(unittest.TestCase):
         self.assertEqual(order[-1], "P0=1")
 
     def test_cli_modes(self):
-        """Без флага остаётся BFS; с флагом выводится только порядок."""
+        """Без флага выводится Mermaid, с флагом — порядок загрузки."""
         args = ["--package", "A", "--version", "1.0-r0", "--test-repo",
                 "--repository", str(REPOS / "chain.json")]
         code, output, error = execute(args + ["--load-order"])
         self.assertEqual(code, 0)
         self.assertIn("1\tD=1.0-r0", output)
-        self.assertNotIn("Пакеты (BFS", output)
+        self.assertNotIn("flowchart TD", output)
         self.assertEqual(error, "")
-        self.assertIn("Пакеты (BFS", execute(args)[1])
+        self.assertIn("flowchart TD", execute(args)[1])
 
     def test_cli_error(self):
         """На цикле нет частичного плана, возвращается код ошибки 1."""
