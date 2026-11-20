@@ -1,11 +1,12 @@
-"""Граф BFS и режим порядка загрузки четвёртого этапа."""
+"""Анализ зависимостей APK и вывод Mermaid, дерева или порядка загрузки."""
 import sys
 from src.config import parse_config
-from src.display import note_reserved_ascii, print_graph
 from src.graph import build_graph
 from src.remote import load_remote
 from src.json_repository import load_test_repository
 from src.loading import print_loading_order
+
+from src.visualization import print_visualization
 
 SUCCESS = 0
 RUNTIME_ERROR = 1
@@ -22,8 +23,7 @@ def main(argv=None):
         if config.load_order:
             print_loading_order(graph, repository)
         else:
-            print_graph(graph)
-        note_reserved_ascii(config)
+            print_visualization(graph, config.ascii)
     except (ValueError, OSError) as error:
         print(f"Ошибка: {error}", file=sys.stderr)
         return RUNTIME_ERROR
